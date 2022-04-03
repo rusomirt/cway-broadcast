@@ -1,0 +1,91 @@
+{
+  "extends": [
+    "airbnb"
+//    "plugin:react/recommended",
+//    "plugin:jsx-a11y/recommended"
+  ],
+  "parser": "babel-eslint",   // more full support of es6 syntax
+  "plugins": [
+    "react",
+    "jsx-a11y",
+    "import"
+  ],
+  "rules": {
+    "arrow-parens": [1, "always"],                // why doesn't it applied by airbnb extention???
+    "implicit-arrow-linebreak": 1,                // why doesn't it applied by airbnb extention???
+    "quotes": [2, "single"],                      // why doesn't it applied by airbnb extention???
+    "jsx-quotes": [2, "prefer-double"],           // why doesn't it applied by airbnb extention???
+    "operator-linebreak": [1, "before"],          // why doesn't it applied by airbnb extention???
+    "object-property-newline": 0,
+    "comma-dangle": [1, "always-multiline"],
+    "default-case": 0,
+    "eqeqeq": [1, "smart"],
+    "function-paren-newline": 0,
+    "import/extensions": 0,
+    "jsx-a11y/click-events-have-key-events": 0,   // key events not needed when click events are used
+    "jsx-a11y/no-static-element-interactions": 0, // eliminate ARIA role attributes
+    "jsx-a11y/no-autofocus": 0,                   // allow autofocus attribute
+    "jsx-a11y/anchor-is-valid": 0,                // allow links without href attribute (Link from react-router)
+    "jsx-a11y/label-has-for": [ 2, {              // allow labels without ID (only nesting is required) (DEPRECATED but still checked)
+      "required": {
+        "every": [ "nesting" ]
+      }
+    }],
+    "jsx-a11y/label-has-associated-control": [ 2, {   // supposed to replace "jsx-a11y/label-has-for" but "jsx-a11y/label-has-for" still gives errors
+      "assert": "nesting"
+    }],
+    "import/first": 0,
+    "import/no-unresolved": 0,
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0,
+    "import/newline-after-import": 0,
+    "key-spacing": [2, {"mode": "minimum"}],
+    "linebreak-style": 0,             // allow windows or unix linebreak
+    "max-len": [1, 150, 2, {
+      "ignoreComments": true,         // comments can exceed max columns
+      "ignoreStrings": true,          // strings can exceed max columns
+      "ignoreTemplateLiterals": true  // template literals can exceed max columns
+    }],
+    "no-continue": 0,
+    "no-console": 0,
+    "no-lonely-if": 0,                // lonely IF sometimes improve code readability
+    "no-mixed-operators": [1, {"allowSamePrecedence": true}],
+    "no-multi-spaces": 0,
+    "no-param-reassign": [2, {"props": false}],
+    "no-prototype-builtins": 0,
+    "no-underscore-dangle": [2, { "allow": ["__typename"] }],   // allow only "__typename" field of GraphQL data
+    "no-unused-vars": [1, {"vars": "all"}],
+    "no-use-before-define": [1, {"functions": false}],
+    "prefer-destructuring": 0,
+    "prefer-template": 1,
+    "react/forbid-prop-types": 0,   // allow prop types 'object', 'array' and 'any'
+    "react/no-array-index-key": 1,
+    "react/state-in-constructor": [2, "never"], // enforce the state initialization style to be with a class property
+
+    "class-methods-use-this": 0,
+    "import/no-extraneous-dependencies": [2, {"devDependencies": true}],
+    "no-undef": 1,
+    "object-curly-newline": 0,
+    "one-var": 0,                           // allow variables to be declared together
+    "one-var-declaration-per-line": 0,      // allow variables to be declared in one line
+    "react/no-did-mount-set-state": 1,
+    "react/sort-comp": 0,                   // disable component fields order check
+    "react/jsx-one-expression-per-line": 0, // allow multiple JSX expressions per line
+    "react/destructuring-assignment": [1, "always"],
+    "react/jsx-props-no-spreading": 0,      // allow JSX props spreading
+    "newline-per-chained-call": 0
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+      // React version. "detect" automatically picks the version you have installed.
+      // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
+      // default to latest and warns if missing
+      // It will default to "detect" in the future
+    }
+  },
+  // Specify environments
+  "env": {
+    "browser": true       // for browser-specific variables (document, window)
+  }
+}
