@@ -30,7 +30,9 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
-    "build": "CI= react-scripts build"
+    "build": "CI= react-scripts build",
+    "co:login": "aws codeartifact login --tool npm --repository cway-frontend-common --domain cway",
+    "co:logout": "npm config delete registry"
   },
   "browserslist": {
     "production": [
