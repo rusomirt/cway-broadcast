@@ -7,16 +7,27 @@ import { ApolloProvider } from '@apollo/client';
 // GraphQL client
 import ApolloClient from './api/Apollo';
 
-// Styling
-import theme from './theme';
-import './common.css';
+// Child components
+import LeftPanel from './components/LeftPanel';
+import Gallery from './components/Gallery';
 
 // Child components
 import { ErrorBoundary } from '@cway/cway-frontend-common/components';
 
-const Broadcast = () => {
+// Styling
+import theme from './theme';
+import './common.css';
+import withStyles from '@material-ui/core/styles/withStyles';
+const styles = {
+  root: {},
+};
+
+const Broadcast = ({ classes }) => {
   return (
-    <div>Broadcast</div>
+    <div>
+      <LeftPanel />
+      <Gallery />
+    </div>
   );
 };
 
