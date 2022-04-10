@@ -10,12 +10,21 @@ const styles = {
     minWidth: 300,
     display: 'flex',
     flexDirection: 'column',
+    backgroundColor: 'lightgray',
+    padding: 5,
+  },
+  panel: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    flex: 1,
   },
 };
 
 const LeftPanel = ({ classes }) => {
   return (
-    <div></div>
+    <div className={classes.root}>
+      <div className={classes.panel}></div>
+    </div>
   );
 };
 
