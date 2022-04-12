@@ -15,8 +15,7 @@ const styles = {
   container: {
     overflow: 'hidden',
   },
-
-  item: {
+  row: {
     display: 'flex',
     alignItems: 'center',
     color: colors.text,
@@ -39,26 +38,28 @@ const styles = {
     visibility: 'hidden',
   },
 
-  folderWrapper: {
+  nodeWrapper: {
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
   },
-  folderIcon: {
+  nodeIcon: {
     margin: '0 0.2em 0',
     fontSize: '1rem',
+  },
+  folderIcon: {
     color: colors.warning,
   },
   fileIcon: {
     color: colors.text,
   },
-  folderIconSelected: {
+  nodeIconSelected: {
     color: colors.rose,
   },
-  folderName: {
+  nodeName: {
     fontWeight: 'normal',
   },
-  folderNameSelected: {
+  nodeNameSelected: {
     fontWeight: 'bold',
   },
 
@@ -79,7 +80,7 @@ const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedBy
 
   return (
     <div className={classes.container}>
-      <div className={classes.item}>
+      <div className={classes.row}>
         <CaretDownIcon
           className={cx(
             classes.arrow,
@@ -94,9 +95,11 @@ const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedBy
           }}
         />
 
-        <div className={classes.folderWrapper} onClick={onSelect}>
-          <Icon className={cx(classes.folderIcon, { [classes.fileIcon]: isFile }, { [classes.folderIconSelected]: selected })} />
-          <span className={cx(classes.folderName, { [classes.folderNameSelected]: selected })}>{nodeLabel}</span>
+        <div className={classes.nodeWrapper} onClick={onSelect}>
+          <Icon
+            className={cx(classes.nodeIcon, { [classes.folderIcon]: !isFile, [classes.fileIcon]: isFile, [classes.nodeIconSelected]: selected })}
+          />
+          <span className={cx(classes.nodeName, { [classes.nodeNameSelected]: selected })}>{nodeLabel}</span>
         </div>
       </div>
 
