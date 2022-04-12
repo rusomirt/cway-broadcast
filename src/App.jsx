@@ -7,7 +7,7 @@ import { loader } from 'graphql.macro';
 // Child components
 import { LoadingIndicator, ErrorDialog } from '@cway/cway-frontend-common/components';
 import LeftPanel from './components/LeftPanel';
-// import Gallery from './components/Gallery';
+import Gallery from './components/Gallery';
 
 // Helper func
 import { deepCopy } from '@cway/cway-frontend-common/utils';
@@ -121,6 +121,26 @@ const Broadcast = ({ classes }) => {
     // onSelectFolder(id);
   };
 
+  // ---------- Extract children of selected folder (as it is in tree structure) --------------------
+
+  let childrenOfSelectedFolder = selectedItemPath.length > 0 ? tree : [];
+  selectedItemPath.forEach((currentFolderId, index) => {
+    childrenOfSelectedFolder = childrenOfSelectedFolder.find((topLevelFolder) => topLevelFolder.id === currentFolderId).children;
+  });
+  console.log('childrenOfSelectedFolder: ', childrenOfSelectedFolder);
+
+  // ---------- Get IDs of all descendant files of selected folder --------------------
+
+  // Recursively check children at all levels of nesting:
+  // if child is file - just add it to array, if child is folder - get files of its children
+  const getDescendantFileIds = (items) => items.reduce((acc, currentChild) => (
+    currentChild.isFile
+      ? [...acc, currentChild.id]
+      : [...acc, ...getDescendantFileIds(currentChild.children)]
+  ), []);
+  const descendantFileIds = getDescendantFileIds(childrenOfSelectedFolder);
+  console.log('descendantFileIds: ', descendantFileIds);
+
   // ---------- GraphQL loading and error state --------------------
 
   if (broadcastLoading || broadcastError) {
@@ -140,7 +160,7 @@ const Broadcast = ({ classes }) => {
         selectedItemPath={selectedItemPath}
         handleSelectItem={handleSelectItem}
       />
-      {/*<Gallery />*/}
+      <Gallery fileIds={descendantFileIds} />
     </div>
   );
 };

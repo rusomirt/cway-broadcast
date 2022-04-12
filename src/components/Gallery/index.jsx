@@ -5,7 +5,12 @@ import ImageGallery from 'react-photo-gallery';
 
 // Styling
 import withStyles from '@material-ui/core/styles/withStyles';
-const styles = {};
+const styles = {
+  root: {
+    flex: 1,
+    overflowY: 'auto',
+  },
+};
 
 const photos = [
   {
@@ -19,7 +24,12 @@ const photos = [
     height: 1
   }
 ];
-const Gallery = ({ classes }) => {
+const Gallery = ({ classes, fileIds }) => {
+  return (
+    <div className={classes.root}>
+      {fileIds.map((id) => <p>{id}</p>)}
+    </div>
+  );
   return (
     <ImageGallery photos={photos} />
   );
@@ -27,6 +37,7 @@ const Gallery = ({ classes }) => {
 
 Gallery.propTypes = {
   classes: PropTypes.object.isRequired,
+  fileIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default withStyles(styles)(Gallery);
