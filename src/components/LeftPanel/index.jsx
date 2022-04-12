@@ -68,7 +68,7 @@ const createTree = (flatTree) => {
     console.group('===== current element: ', { ...el });
     console.log('parentEl: ', treeDataCopy[idMapping[el.parent]]);
 
-    if (el.parent === undefined) {
+    if (!el.parent) {
       // Handle the root element
       tree.push(el);
     } else {
