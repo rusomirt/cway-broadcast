@@ -217,4 +217,8 @@ const LeftPanel = ({ classes }) => {
   );
 };
 
+LeftPanel.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
 export default withStyles(styles)(LeftPanel);
