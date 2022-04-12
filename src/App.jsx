@@ -9,6 +9,9 @@ import { LoadingIndicator, ErrorDialog } from '@cway/cway-frontend-common/compon
 import LeftPanel from './components/LeftPanel';
 // import Gallery from './components/Gallery';
 
+// Helper func
+import { deepCopy } from '@cway/cway-frontend-common/utils';
+
 // Styling
 import withStyles from '@material-ui/core/styles/withStyles';
 const styles = {
@@ -20,6 +23,63 @@ const styles = {
 
 const BROADCAST = loader('@cway/cway-frontend-common/graphql/secured/queries/Broadcast.graphql');
 
+/**
+ * Create a nested folders structure (suitable for rendering) from flat tree data
+ * @param flatTree [
+ *   { __typename, id, name, parent },
+ *   { __typename, id, name, parent },
+ *   ...
+ * ]
+ * @returns [
+ *   { id, name, children: [
+ *     { id, name, isFile, children: [] },
+ *     { id, name, isFile, children: [] },
+ *     ...
+ *   ]},
+ *   ...
+ * ]
+ */
+const createTree = (flatTree) => {
+  // console.groupCollapsed('LeftPanel.createTree()');
+  // console.log('flatTree: ', [...flatTree]);
+
+  const treeDataCopy = deepCopy(flatTree);
+
+  const idMapping = treeDataCopy.reduce((acc, el, i) => {
+    acc[el.id] = i;
+    return acc;
+  }, {});
+  // console.log('idMapping: ', { ...idMapping });
+
+  const tree = [];
+  treeDataCopy.forEach((el) => {
+    el.isFile = el.__typename === 'FDFile';
+    delete el.__typename;
+    if (!el.isFile) el.children = el.children || [];
+
+    // console.group('===== current element: ', { ...el });
+    // console.log('parentEl: ', treeDataCopy[idMapping[el.parent]]);
+
+    if (!el.parent) {
+      // Handle the root element
+      tree.push(el);
+    } else {
+      // Non-root element: use mapping to locate the parent element in data array
+      const parentEl = treeDataCopy[idMapping[el.parent]];
+
+      // Add current el to its parent's "children" array
+      parentEl.children = [...(parentEl.children || []), el];
+      // console.log('parentEl after add current element: ', treeDataCopy[idMapping[el.parent]]);
+    }
+    // console.log('treeDataCopy: ', [...treeDataCopy]);
+    // console.groupEnd();
+  });
+
+  // console.groupEnd();
+
+  return tree;
+};
+
 const Broadcast = ({ classes }) => {
   console.group('Broadcast()');
 
@@ -27,12 +87,18 @@ const Broadcast = ({ classes }) => {
 
   const { data: broadcastData, loading: broadcastLoading, error: broadcastError } =
     useQuery(BROADCAST, { variables: { id: '663c2e05-1208-46bf-b32f-0f354eec8ae0' } });
+  const flatTreeData = broadcastData?.broadcast.fileDescriptor || [];
+
+  // ---------- Nested tree hierarchy from flat tree --------------------
+
+  const tree = createTree(flatTreeData);
+  console.log('tree: ', tree);
 
   // ---------- Tree item selection --------------------
 
   const [selectedItemPath, setSelectedItemPath] = useState([]);
   console.log('selectedItemPath: ', selectedItemPath);
-  const createSelectedItemPath = (flatTreeData, selectedId) => {
+  const createSelectedItemPath = (selectedId) => {
     console.group(`createSelectedItemPath(${selectedId})`);
     const getParentId = (itemId) => flatTreeData.find(({ id }) => id === itemId).parent;
     const path = [selectedId];
@@ -51,7 +117,7 @@ const Broadcast = ({ classes }) => {
   };
   const handleSelectItem = (id) => {
     // setValueInBrowser({ name: 'mc_selectPath', value: id, expireDate: '' });
-    setSelectedItemPath(createSelectedItemPath(broadcastData?.broadcast.fileDescriptor, id));
+    setSelectedItemPath(createSelectedItemPath(id));
     // onSelectFolder(id);
   };
 
@@ -70,7 +136,7 @@ const Broadcast = ({ classes }) => {
   return (
     <div className={classes.root}>
       <LeftPanel
-        flatTreeData={broadcastData.broadcast.fileDescriptor}
+        tree={tree}
         selectedItemPath={selectedItemPath}
         handleSelectItem={handleSelectItem}
       />

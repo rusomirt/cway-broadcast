@@ -5,9 +5,6 @@ import PropTypes from 'prop-types';
 // Child components
 import TreeViewNode from '../TreeViewNode';
 
-// Helper func
-import { deepCopy } from '@cway/cway-frontend-common/utils';
-
 // Styling
 import withStyles from '@material-ui/core/styles/withStyles';
 const styles = {
@@ -31,71 +28,7 @@ const styles = {
   },
 };
 
-/**
- * Create a nested folders structure (suitable for rendering) from flat tree data
- * @param flatTree [
- *   { __typename, id, name, parent },
- *   { __typename, id, name, parent },
- *   ...
- * ]
- * @returns [
- *   { id, name, children: [
- *     { id, name, isFile, children: [] },
- *     { id, name, isFile, children: [] },
- *     ...
- *   ]},
- *   ...
- * ]
- */
-const createTree = (flatTree) => {
-  // console.groupCollapsed('LeftPanel.createTree()');
-  // console.log('flatTree: ', [...flatTree]);
-
-  const treeDataCopy = deepCopy(flatTree);
-
-  const idMapping = treeDataCopy.reduce((acc, el, i) => {
-    acc[el.id] = i;
-    return acc;
-  }, {});
-  // console.log('idMapping: ', { ...idMapping });
-
-  const tree = [];
-  treeDataCopy.forEach((el) => {
-    el.isFile = el.__typename === 'FDFile';
-    delete el.__typename;
-    if (!el.isFile) el.children = el.children || [];
-
-    // console.group('===== current element: ', { ...el });
-    // console.log('parentEl: ', treeDataCopy[idMapping[el.parent]]);
-
-    if (!el.parent) {
-      // Handle the root element
-      tree.push(el);
-    } else {
-      // Non-root element: use mapping to locate the parent element in data array
-      const parentEl = treeDataCopy[idMapping[el.parent]];
-
-      // Add current el to its parent's "children" array
-      parentEl.children = [...(parentEl.children || []), el];
-      // console.log('parentEl after add current element: ', treeDataCopy[idMapping[el.parent]]);
-    }
-    // console.log('treeDataCopy: ', [...treeDataCopy]);
-    // console.groupEnd();
-  });
-
-  // console.groupEnd();
-
-  return tree;
-};
-
-const LeftPanel = ({ classes, flatTreeData, selectedItemPath, handleSelectItem }) => {
-  console.group('LeftPanel');
-
-  // ---------- Nested tree hierarchy from flat tree --------------------
-
-  const tree = createTree(flatTreeData);
-  console.log('tree: ', tree);
-
+const LeftPanel = ({ classes, tree, selectedItemPath, handleSelectItem }) => {
   const renderTreeNode = ({ id, name, isFile, children }, onSelect) => {
     // console.group(`LeftPanel.renderTreeNode(): id = ${id}, name = ${name}`);
     // console.log('children: ', children);
@@ -118,9 +51,6 @@ const LeftPanel = ({ classes, flatTreeData, selectedItemPath, handleSelectItem }
       </TreeViewNode>
     );
   };
-  console.groupEnd();
-
-  // ----------------------------------------------------------------------
 
   return (
     <div className={classes.root}>
@@ -135,12 +65,15 @@ const LeftPanel = ({ classes, flatTreeData, selectedItemPath, handleSelectItem }
 
 LeftPanel.propTypes = {
   classes: PropTypes.object.isRequired,
-  flatTreeData: PropTypes.arrayOf(PropTypes.shape({
-    __typename: PropTypes.string.isRequired,
+  tree: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
+    isFile: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     parent: PropTypes.string,
+    children: PropTypes.array,
   })).isRequired,
+  selectedItemPath: PropTypes.arrayOf(PropTypes.string).isRequired,
+  handleSelectItem: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(LeftPanel);
