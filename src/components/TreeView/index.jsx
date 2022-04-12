@@ -71,7 +71,7 @@ const styles = {
   },
 };
 
-const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedByOuter, onExpand, noChildren, isFile }) => {
+const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedByOuter, onExpand, isFile }) => {
   const Icon = isFile ? (selected ? FileIcon : FileOIcon) : FolderIcon;
 
   const [expandedByClick, setExpandedByClick] = useState(false);
@@ -85,7 +85,7 @@ const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedBy
           className={cx(
             classes.arrow,
             { [classes.arrowCollapsed]: !expanded },
-            { [classes.arrowInvisible]: noChildren || isFile },
+            { [classes.arrowInvisible]: isFile || (children.length === 0) },
           )}
           onClick={() => {
             setExpandedByClick((prevValue) => !prevValue);
@@ -111,7 +111,6 @@ const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedBy
 };
 
 TreeView.defaultProps = {
-  noChildren: false,
   isFile: false,
 };
 
@@ -124,7 +123,6 @@ TreeView.propTypes = {
   onSelect: PropTypes.func.isRequired,
   expandedByOuter: PropTypes.bool.isRequired,
   onExpand: PropTypes.func.isRequired,
-  noChildren: PropTypes.bool,
   isFile: PropTypes.bool,
 };
 
