@@ -24,6 +24,7 @@ const styles = {
   panel: {
     backgroundColor: 'white',
     borderRadius: 5,
+    padding: 5,
     flex: 1,
   },
   treeWrapper: {
