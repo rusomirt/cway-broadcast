@@ -1,5 +1,5 @@
 // Packages
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 // Child components
@@ -88,35 +88,8 @@ const createTree = (flatTree) => {
   return tree;
 };
 
-const LeftPanel = ({ classes, flatTreeData }) => {
+const LeftPanel = ({ classes, flatTreeData, selectedItemPath, handleSelectItem }) => {
   console.group('LeftPanel');
-
-  // ---------- Tree item selection --------------------
-
-  const [selectedItemPath, setSelectedItemPath] = useState([]);
-  console.log('selectedItemPath: ', selectedItemPath);
-  const createSelectedItemPath = (selectedId) => {
-    console.group(`createSelectedItemPath(${selectedId})`);
-    const getParentId = (itemId) => flatTreeData.find(({ id }) => id === itemId).parent;
-    const path = [selectedId];
-    console.log('path: ', path);
-    let pId = getParentId(selectedId);
-    console.log('pId: ', pId);
-    // Iterate selected folder ancestors
-    while (pId) {
-      path.unshift(pId);    // put parent ID at the beginning of path array
-      console.log('path: ', path);
-      pId = getParentId(pId);
-      console.log('pId: ', pId);
-    }
-    console.groupEnd();
-    return path;
-  };
-  const handleSelectItem = (id) => {
-    // setValueInBrowser({ name: 'mc_selectPath', value: id, expireDate: '' });
-    setSelectedItemPath(createSelectedItemPath(id));
-    // onSelectFolder(id);
-  };
 
   // ---------- Nested tree hierarchy from flat tree --------------------
 
