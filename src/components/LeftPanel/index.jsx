@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 // import { loader } from 'graphql.macro';
 
 // Child components
-import TreeView from '../TreeView';
+import TreeViewNode from '../TreeViewNode';
 
 // Helper func
 import { deepCopy } from '@cway/cway-frontend-common/utils';
@@ -189,7 +189,7 @@ const LeftPanel = ({ classes }) => {
     console.groupEnd();
 
     return (
-      <TreeView
+      <TreeViewNode
         nodeLabel={name}
         selected={selected}
         onSelect={() => onSelect(id)}
@@ -199,7 +199,7 @@ const LeftPanel = ({ classes }) => {
         key={id}
       >
         {children ? children.map((childFolder) => renderTreeNode(childFolder, onSelect)) : []}
-      </TreeView>
+      </TreeViewNode>
     );
   };
   console.groupEnd();
