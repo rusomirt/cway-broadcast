@@ -9,7 +9,7 @@ import possibleTypes from '@cway/cway-frontend-common/graphql/secured/PossibleTy
 const cache = new InMemoryCache({ possibleTypes });
 
 // Default HTTP link is replaced with createUploadLink which allows to upload files
-const httpLink = createUploadLink({ uri: endpoints.publicGraphql });
+const httpLink = createUploadLink({ uri: endpoints.graphql });
 
 // Add NextGen app identification to every request "X-Calling-App" header (to distinguish from old Cway app)
 const idHeaderLink = new ApolloLink((operation, forward) => {
