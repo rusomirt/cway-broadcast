@@ -1,6 +1,14 @@
 // Packages
 import React from 'react';
 import PropTypes from 'prop-types';
+// import { useQuery } from '@apollo/client';
+// import { loader } from 'graphql.macro';
+
+// Child components
+import TreeView from '../TreeView';
+
+// Helper func
+import { deepCopy } from '@cway/cway-frontend-common/utils';
 
 // Styling
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -18,6 +26,67 @@ const styles = {
     borderRadius: 5,
     flex: 1,
   },
+  treeWrapper: {
+    flex: 1,
+    overflowY: 'auto',
+  },
+};
+
+/**
+ * Create a nested folders structure (suitable for rendering) from flat tree data
+ * @param flatTree [
+ *   { __typename, id, name, parent },
+ *   { __typename, id, name, parent },
+ *   ...
+ * ]
+ * @returns [
+ *   { id, name, children: [
+ *     { id, name, isFile, children: [] },
+ *     { id, name, isFile, children: [] },
+ *     ...
+ *   ]},
+ *   ...
+ * ]
+ */
+const createTree = (flatTree) => {
+  console.group('LeftPanel.createTree()');
+  console.log('flatTree: ', [...flatTree]);
+
+  const treeDataCopy = deepCopy(flatTree);
+
+  const idMapping = treeDataCopy.reduce((acc, el, i) => {
+    acc[el.id] = i;
+    return acc;
+  }, {});
+  console.log('idMapping: ', { ...idMapping });
+
+  const tree = [];
+  treeDataCopy.forEach((el) => {
+    el.isFile = el.__typename === 'FDFile';
+    delete el.__typename;
+    if (!el.isFile) el.children = el.children || [];
+
+    console.group('===== current element: ', { ...el });
+    console.log('parentEl: ', treeDataCopy[idMapping[el.parent]]);
+
+    if (el.parent === undefined) {
+      // Handle the root element
+      tree.push(el);
+    } else {
+      // Non-root element: use mapping to locate the parent element in data array
+      const parentEl = treeDataCopy[idMapping[el.parent]];
+
+      // Add current el to its parent's "children" array
+      parentEl.children = [...(parentEl.children || []), el];
+      console.log('parentEl after add current element: ', treeDataCopy[idMapping[el.parent]]);
+    }
+    console.log('treeDataCopy: ', [...treeDataCopy]);
+    console.groupEnd();
+  });
+
+  console.groupEnd();
+
+  return tree;
 };
 
 // const BROADCAST = loader('@cway/cway-frontend-common/graphql/public/queries/Broadcast.graphql');
@@ -76,9 +145,39 @@ const broadcastMock = {
 };
 
 const LeftPanel = ({ classes }) => {
+  console.group('LeftPanel');
+  const tree = createTree(broadcastMock.fileDescriptor);
+  console.log('tree: ', tree);
+
+  const renderTreeNode = ({ id, name, isFile, children }, onSelect) => {
+    console.group(`LeftPanel.renderTreeNode(): id = ${id}, name = ${name}`);
+    console.log('children: ', children);
+    console.groupEnd();
+
+    return (
+      <TreeView
+        nodeLabel={name}
+        selected={false}
+        onSelect={() => onSelect(id)}
+        expandedByOuter={false}
+        onExpand={() => {}}
+        noChildren={isFile || (children.length === 0)}
+        isFile={isFile}
+        key={id}
+      >
+        {children ? children.map((childFolder) => renderTreeNode(childFolder, onSelect)) : []}
+      </TreeView>
+    );
+  };
+  console.groupEnd();
+
   return (
     <div className={classes.root}>
-      <div className={classes.panel}></div>
+      <div className={classes.panel}>
+        <div className={classes.treeWrapper}>
+          {(tree.length > 0) ? tree.map((highLevelFolder) => renderTreeNode(highLevelFolder, (id) => console.log('selected ID: ', id))) : null}
+        </div>
+      </div>
     </div>
   );
 };
