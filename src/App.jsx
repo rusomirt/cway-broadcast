@@ -1,8 +1,11 @@
 // Packages
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useQuery } from '@apollo/client';
+import { loader } from 'graphql.macro';
 
 // Child components
+import { LoadingIndicator, ErrorDialog } from '@cway/cway-frontend-common/components';
 import LeftPanel from './components/LeftPanel';
 // import Gallery from './components/Gallery';
 
@@ -15,70 +18,24 @@ const styles = {
   },
 };
 
-const broadcastMock = {
-  id: 'uuid_broadcast',
-  name: 'bc1',
-  type: 'FOLDER',
-  fileDescriptor: [
-    {
-      __typename: 'FDFolder',
-      id: 'folder1uuid',
-      name: 'folder1',
-    },
-    {
-      __typename: 'FDFolder',
-      id: 'folder2uuid',
-      name: 'folder2',
-    },
-    {
-      __typename: 'FDFile',
-      id: 'file11uuid',
-      name: 'file11',
-      parent: 'folder1uuid',
-    },
-    {
-      __typename: 'FDFile',
-      id: 'file12uuid',
-      name: 'file12',
-      parent: 'folder1uuid',
-    },
-    {
-      __typename: 'FDFile',
-      id: 'file21uuid',
-      name: 'file21',
-      parent: 'folder2uuid',
-    },
-    {
-      __typename: 'FDFolder',
-      id: 'folder13uuid',
-      name: 'folder13',
-      parent: 'folder1uuid',
-    },
-    {
-      __typename: 'FDFile',
-      id: 'file131uuid',
-      name: 'file131',
-      parent: 'folder13uuid',
-    },
-    {
-      __typename: 'FDFolder',
-      id: 'folder132uuid',
-      name: 'folder132',
-      parent: 'folder13uuid',
-    },
-    {
-      __typename: 'FDFolder',
-      id: 'folder14uuid',
-      name: 'folder14',
-      parent: 'folder1uuid',
-    },
-  ],
-};
+const BROADCAST = loader('@cway/cway-frontend-common/graphql/secured/queries/Broadcast.graphql');
 
 const Broadcast = ({ classes }) => {
+  console.group('Broadcast()');
+  const { data: broadcastData, loading: broadcastLoading, error: broadcastError } =
+    useQuery(BROADCAST, { variables: { id: '663c2e05-1208-46bf-b32f-0f354eec8ae0' } });
+
+  if (broadcastLoading || broadcastError) {
+    console.groupEnd();
+  }
+  if (broadcastLoading) return <LoadingIndicator fullscreen />;
+  if (broadcastError) return <ErrorDialog sentryError={broadcastError} componentName="App" />;
+
+  console.groupEnd();
+
   return (
     <div className={classes.root}>
-      <LeftPanel flatTreeData={broadcastMock.fileDescriptor} />
+      <LeftPanel flatTreeData={broadcastData.broadcast.fileDescriptor} />
       {/*<Gallery />*/}
     </div>
   );
