@@ -90,7 +90,7 @@ const createTree = (flatTree) => {
   return tree;
 };
 
-// const BROADCAST = loader('@cway/cway-frontend-common/graphql/public/queries/Broadcast.graphql');
+// const BROADCAST = loader('@cway/cway-frontend-common/graphql/secured/queries/Broadcast.graphql');
 const broadcastMock = {
   id: 'uuid_broadcast',
   name: 'bc1',

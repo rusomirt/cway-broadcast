@@ -4,7 +4,7 @@ import { onError } from '@apollo/client/link/error';
 
 // Constants
 import { endpoints } from '@cway/cway-frontend-common/constants';
-import possibleTypes from '@cway/cway-frontend-common/graphql/PossibleTypesEnums';
+import possibleTypes from '@cway/cway-frontend-common/graphql/secured/PossibleTypesEnums';
 
 const cache = new InMemoryCache({ possibleTypes });
 
