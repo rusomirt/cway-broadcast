@@ -194,7 +194,6 @@ const LeftPanel = ({ classes }) => {
         selected={selected}
         onSelect={() => onSelect(id)}
         expandedByOuter={expandedByOuter}
-        onExpand={() => {}}
         isFile={isFile}
         key={id}
       >

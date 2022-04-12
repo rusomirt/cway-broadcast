@@ -111,6 +111,7 @@ const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedBy
 };
 
 TreeView.defaultProps = {
+  onExpand: () => {},
   isFile: false,
 };
 
@@ -122,7 +123,7 @@ TreeView.propTypes = {
   selected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func.isRequired,
   expandedByOuter: PropTypes.bool.isRequired,
-  onExpand: PropTypes.func.isRequired,
+  onExpand: PropTypes.func,
   isFile: PropTypes.bool,
 };
 
