@@ -48,8 +48,8 @@ const styles = {
  * ]
  */
 const createTree = (flatTree) => {
-  console.groupCollapsed('LeftPanel.createTree()');
-  console.log('flatTree: ', [...flatTree]);
+  // console.groupCollapsed('LeftPanel.createTree()');
+  // console.log('flatTree: ', [...flatTree]);
 
   const treeDataCopy = deepCopy(flatTree);
 
@@ -57,7 +57,7 @@ const createTree = (flatTree) => {
     acc[el.id] = i;
     return acc;
   }, {});
-  console.log('idMapping: ', { ...idMapping });
+  // console.log('idMapping: ', { ...idMapping });
 
   const tree = [];
   treeDataCopy.forEach((el) => {
@@ -65,8 +65,8 @@ const createTree = (flatTree) => {
     delete el.__typename;
     if (!el.isFile) el.children = el.children || [];
 
-    console.group('===== current element: ', { ...el });
-    console.log('parentEl: ', treeDataCopy[idMapping[el.parent]]);
+    // console.group('===== current element: ', { ...el });
+    // console.log('parentEl: ', treeDataCopy[idMapping[el.parent]]);
 
     if (!el.parent) {
       // Handle the root element
@@ -77,13 +77,13 @@ const createTree = (flatTree) => {
 
       // Add current el to its parent's "children" array
       parentEl.children = [...(parentEl.children || []), el];
-      console.log('parentEl after add current element: ', treeDataCopy[idMapping[el.parent]]);
+      // console.log('parentEl after add current element: ', treeDataCopy[idMapping[el.parent]]);
     }
-    console.log('treeDataCopy: ', [...treeDataCopy]);
-    console.groupEnd();
+    // console.log('treeDataCopy: ', [...treeDataCopy]);
+    // console.groupEnd();
   });
 
-  console.groupEnd();
+  // console.groupEnd();
 
   return tree;
 };
@@ -124,12 +124,12 @@ const LeftPanel = ({ classes, flatTreeData }) => {
   console.log('tree: ', tree);
 
   const renderTreeNode = ({ id, name, isFile, children }, onSelect) => {
-    console.group(`LeftPanel.renderTreeNode(): id = ${id}, name = ${name}`);
-    console.log('children: ', children);
+    // console.group(`LeftPanel.renderTreeNode(): id = ${id}, name = ${name}`);
+    // console.log('children: ', children);
     const selected = id === selectedItemPath[selectedItemPath.length - 1];
     // Expand all ancestors of selected folder
     const expandedByOuter = selectedItemPath.slice(0, -1).some((itemId) => itemId === id);
-    console.groupEnd();
+    // console.groupEnd();
 
     return (
       <TreeViewNode

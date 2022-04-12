@@ -72,7 +72,7 @@ const styles = {
 };
 
 const TreeViewNode = ({ classes, children, nodeLabel, selected, onSelect, expandedByOuter, onExpand, isFile, showFiles }) => {
-  console.group(`TreeViewNode(${nodeLabel}) selected: ${selected}, expandedByOuter: ${expandedByOuter}, isFile: ${isFile}`);
+  // console.group(`TreeViewNode(${nodeLabel}) selected: ${selected}, expandedByOuter: ${expandedByOuter}, isFile: ${isFile}`);
   const Icon = isFile ? (selected ? FileIcon : FileOIcon) : FolderIcon;
 
   const [expandedByClick, setExpandedByClick] = useState(false);
@@ -80,12 +80,12 @@ const TreeViewNode = ({ classes, children, nodeLabel, selected, onSelect, expand
   const expanded = expandedByClick || expandedByOuter;
 
   const renderedChildren = showFiles ? children : children.filter((child) => !child.props.isFile);
-  console.log('renderedChildren: ', renderedChildren);
+  // console.log('renderedChildren: ', renderedChildren);
 
   const arrowHidden = isFile || renderedChildren.length === 0;
-  console.log('arrowHidden: ', arrowHidden);
+  // console.log('arrowHidden: ', arrowHidden);
 
-  console.groupEnd();
+  // console.groupEnd();
 
   return (
     <div className={classes.container}>
