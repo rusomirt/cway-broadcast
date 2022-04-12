@@ -25,4 +25,8 @@ const Gallery = ({ classes }) => {
   );
 };
 
+Gallery.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
 export default withStyles(styles)(Gallery);
