@@ -1,8 +1,6 @@
 // Packages
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-// import { useQuery } from '@apollo/client';
-// import { loader } from 'graphql.macro';
 
 // Child components
 import TreeViewNode from '../TreeViewNode';
@@ -90,68 +88,7 @@ const createTree = (flatTree) => {
   return tree;
 };
 
-// const BROADCAST = loader('@cway/cway-frontend-common/graphql/secured/queries/Broadcast.graphql');
-const broadcastMock = {
-  id: 'uuid_broadcast',
-  name: 'bc1',
-  type: 'FOLDER',
-  fileDescriptor: [
-    {
-      __typename: 'FDFolder',
-      id: 'folder1uuid',
-      name: 'folder1',
-    },
-    {
-      __typename: 'FDFolder',
-      id: 'folder2uuid',
-      name: 'folder2',
-    },
-    {
-      __typename: 'FDFile',
-      id: 'file11uuid',
-      name: 'file11',
-      parent: 'folder1uuid',
-    },
-    {
-      __typename: 'FDFile',
-      id: 'file12uuid',
-      name: 'file12',
-      parent: 'folder1uuid',
-    },
-    {
-      __typename: 'FDFile',
-      id: 'file21uuid',
-      name: 'file21',
-      parent: 'folder2uuid',
-    },
-    {
-      __typename: 'FDFolder',
-      id: 'folder13uuid',
-      name: 'folder13',
-      parent: 'folder1uuid',
-    },
-    {
-      __typename: 'FDFile',
-      id: 'file131uuid',
-      name: 'file131',
-      parent: 'folder13uuid',
-    },
-    {
-      __typename: 'FDFolder',
-      id: 'folder132uuid',
-      name: 'folder132',
-      parent: 'folder13uuid',
-    },
-    {
-      __typename: 'FDFolder',
-      id: 'folder14uuid',
-      name: 'folder14',
-      parent: 'folder1uuid',
-    },
-  ],
-};
-
-const LeftPanel = ({ classes }) => {
+const LeftPanel = ({ classes, flatTreeData }) => {
   console.group('LeftPanel');
 
   // ---------- Tree item selection --------------------
@@ -160,7 +97,7 @@ const LeftPanel = ({ classes }) => {
   console.log('selectedItemPath: ', selectedItemPath);
   const createSelectedItemPath = (selectedId) => {
     console.group(`createSelectedItemPath(${selectedId})`);
-    const getParentId = (itemId) => broadcastMock.fileDescriptor.find(({ id }) => id === itemId).parent;
+    const getParentId = (itemId) => flatTreeData.find(({ id }) => id === itemId).parent;
     const path = [selectedId];
     console.log('path: ', path);
     let pId = getParentId(selectedId);
@@ -183,7 +120,7 @@ const LeftPanel = ({ classes }) => {
 
   // ---------- Nested tree hierarchy from flat tree --------------------
 
-  const tree = createTree(broadcastMock.fileDescriptor);
+  const tree = createTree(flatTreeData);
   console.log('tree: ', tree);
 
   const renderTreeNode = ({ id, name, isFile, children }, onSelect) => {
@@ -225,6 +162,12 @@ const LeftPanel = ({ classes }) => {
 
 LeftPanel.propTypes = {
   classes: PropTypes.object.isRequired,
+  flatTreeData: PropTypes.arrayOf(PropTypes.shape({
+    __typename: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    parent: PropTypes.string,
+  })).isRequired,
 };
 
 export default withStyles(styles)(LeftPanel);
