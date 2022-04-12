@@ -50,7 +50,7 @@ const styles = {
  * ]
  */
 const createTree = (flatTree) => {
-  console.group('LeftPanel.createTree()');
+  console.groupCollapsed('LeftPanel.createTree()');
   console.log('flatTree: ', [...flatTree]);
 
   const treeDataCopy = deepCopy(flatTree);
@@ -138,6 +138,12 @@ const broadcastMock = {
     },
     {
       __typename: 'FDFolder',
+      id: 'folder132uuid',
+      name: 'folder132',
+      parent: 'folder13uuid',
+    },
+    {
+      __typename: 'FDFolder',
       id: 'folder14uuid',
       name: 'folder14',
       parent: 'folder1uuid',
@@ -195,6 +201,7 @@ const LeftPanel = ({ classes }) => {
         onSelect={() => onSelect(id)}
         expandedByOuter={expandedByOuter}
         isFile={isFile}
+        showFiles={false}
         key={id}
       >
         {children ? children.map((childFolder) => renderTreeNode(childFolder, onSelect)) : []}

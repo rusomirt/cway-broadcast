@@ -71,12 +71,21 @@ const styles = {
   },
 };
 
-const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedByOuter, onExpand, isFile }) => {
+const TreeViewNode = ({ classes, children, nodeLabel, selected, onSelect, expandedByOuter, onExpand, isFile, showFiles }) => {
+  console.group(`TreeViewNode(${nodeLabel}) selected: ${selected}, expandedByOuter: ${expandedByOuter}, isFile: ${isFile}`);
   const Icon = isFile ? (selected ? FileIcon : FileOIcon) : FolderIcon;
 
   const [expandedByClick, setExpandedByClick] = useState(false);
   // Folder can be expanded manually by click, and also it's expanded if contains selected folder
   const expanded = expandedByClick || expandedByOuter;
+
+  const renderedChildren = showFiles ? children : children.filter((child) => !child.props.isFile);
+  console.log('renderedChildren: ', renderedChildren);
+
+  const arrowHidden = isFile || renderedChildren.length === 0;
+  console.log('arrowHidden: ', arrowHidden);
+
+  console.groupEnd();
 
   return (
     <div className={classes.container}>
@@ -85,7 +94,7 @@ const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedBy
           className={cx(
             classes.arrow,
             { [classes.arrowCollapsed]: !expanded },
-            { [classes.arrowInvisible]: isFile || (children.length === 0) },
+            { [classes.arrowInvisible]: arrowHidden },
           )}
           onClick={() => {
             setExpandedByClick((prevValue) => !prevValue);
@@ -104,18 +113,19 @@ const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedBy
       </div>
 
       <div className={cx(classes.children, { [classes.childrenCollapsed]: !expanded })}>
-        {expanded && children}
+        {expanded && renderedChildren}
       </div>
     </div>
   );
 };
 
-TreeView.defaultProps = {
+TreeViewNode.defaultProps = {
   onExpand: () => {},
   isFile: false,
+  showFiles: false,
 };
 
-TreeView.propTypes = {
+TreeViewNode.propTypes = {
   classes: PropTypes.object.isRequired,
   children: PropTypes.node.isRequired,
 
@@ -125,6 +135,7 @@ TreeView.propTypes = {
   expandedByOuter: PropTypes.bool.isRequired,
   onExpand: PropTypes.func,
   isFile: PropTypes.bool,
+  showFiles: PropTypes.bool,
 };
 
-export default withStyles(styles)(TreeView);
+export default withStyles(styles)(TreeViewNode);
