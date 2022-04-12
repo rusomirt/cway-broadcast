@@ -7,7 +7,7 @@ import cx from 'classnames';
 import { colors } from '@cway/cway-frontend-common/constants';
 
 // Icons
-import { CaretDownIcon, FolderIcon, FileOIcon } from '@cway/cway-frontend-common/icons';
+import { CaretDownIcon, FolderIcon, FileIcon, FileOIcon } from '@cway/cway-frontend-common/icons';
 
 // Styling
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -49,10 +49,18 @@ const styles = {
     fontSize: '1rem',
     color: colors.warning,
   },
+  fileIcon: {
+    color: colors.text,
+  },
   folderIconSelected: {
     color: colors.rose,
   },
-  folderName: {},
+  folderName: {
+    fontWeight: 'normal',
+  },
+  folderNameSelected: {
+    fontWeight: 'bold',
+  },
 
   children: {
     marginLeft: 20,
@@ -63,7 +71,7 @@ const styles = {
 };
 
 const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedByOuter, onExpand, noChildren, isFile }) => {
-  const Icon = isFile ? FileOIcon : FolderIcon;
+  const Icon = isFile ? (selected ? FileIcon : FileOIcon) : FolderIcon;
 
   const [expandedByClick, setExpandedByClick] = useState(false);
   // Folder can be expanded manually by click, and also it's expanded if contains selected folder
@@ -87,8 +95,8 @@ const TreeView = ({ classes, children, nodeLabel, selected, onSelect, expandedBy
         />
 
         <div className={classes.folderWrapper} onClick={onSelect}>
-          <Icon className={cx(classes.folderIcon, { [classes.folderIconSelected]: selected })} />
-          <span className={classes.folderName}>{nodeLabel}</span>
+          <Icon className={cx(classes.folderIcon, { [classes.fileIcon]: isFile }, { [classes.folderIconSelected]: selected })} />
+          <span className={cx(classes.folderName, { [classes.folderNameSelected]: selected })}>{nodeLabel}</span>
         </div>
       </div>
 

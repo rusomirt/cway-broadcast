@@ -1,5 +1,5 @@
 // Packages
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // import { useQuery } from '@apollo/client';
 // import { loader } from 'graphql.macro';
@@ -146,20 +146,53 @@ const broadcastMock = {
 
 const LeftPanel = ({ classes }) => {
   console.group('LeftPanel');
+
+  // ---------- Tree item selection --------------------
+
+  const [selectedItemPath, setSelectedItemPath] = useState([]);
+  console.log('selectedItemPath: ', selectedItemPath);
+  const createSelectedItemPath = (selectedId) => {
+    console.group(`createSelectedItemPath(${selectedId})`);
+    const getParentId = (itemId) => broadcastMock.fileDescriptor.find(({ id }) => id === itemId).parent;
+    const path = [selectedId];
+    console.log('path: ', path);
+    let pId = getParentId(selectedId);
+    console.log('pId: ', pId);
+    // Iterate selected folder ancestors
+    while (pId) {
+      path.unshift(pId);    // put parent ID at the beginning of path array
+      console.log('path: ', path);
+      pId = getParentId(pId);
+      console.log('pId: ', pId);
+    }
+    console.groupEnd();
+    return path;
+  };
+  const handleSelectItem = (id) => {
+    // setValueInBrowser({ name: 'mc_selectPath', value: id, expireDate: '' });
+    setSelectedItemPath(createSelectedItemPath(id));
+    // onSelectFolder(id);
+  };
+
+  // ---------- Nested tree hierarchy from flat tree --------------------
+
   const tree = createTree(broadcastMock.fileDescriptor);
   console.log('tree: ', tree);
 
   const renderTreeNode = ({ id, name, isFile, children }, onSelect) => {
     console.group(`LeftPanel.renderTreeNode(): id = ${id}, name = ${name}`);
     console.log('children: ', children);
+    const selected = id === selectedItemPath[selectedItemPath.length - 1];
+    // Expand all ancestors of selected folder
+    const expandedByOuter = selectedItemPath.slice(0, -1).some((itemId) => itemId === id);
     console.groupEnd();
 
     return (
       <TreeView
         nodeLabel={name}
-        selected={false}
+        selected={selected}
         onSelect={() => onSelect(id)}
-        expandedByOuter={false}
+        expandedByOuter={expandedByOuter}
         onExpand={() => {}}
         noChildren={isFile || (children.length === 0)}
         isFile={isFile}
@@ -171,11 +204,13 @@ const LeftPanel = ({ classes }) => {
   };
   console.groupEnd();
 
+  // ----------------------------------------------------------------------
+
   return (
     <div className={classes.root}>
       <div className={classes.panel}>
         <div className={classes.treeWrapper}>
-          {(tree.length > 0) ? tree.map((highLevelFolder) => renderTreeNode(highLevelFolder, (id) => console.log('selected ID: ', id))) : null}
+          {(tree.length > 0) ? tree.map((highLevelFolder) => renderTreeNode(highLevelFolder, handleSelectItem)) : null}
         </div>
       </div>
     </div>
