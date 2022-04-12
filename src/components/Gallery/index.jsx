@@ -1,32 +1,27 @@
 // Packages
 import React from 'react';
 import PropTypes from 'prop-types';
-import ImageGallery from 'react-image-gallery';
+import ImageGallery from 'react-photo-gallery';
 
 // Styling
 import withStyles from '@material-ui/core/styles/withStyles';
 const styles = {};
 
-const images = [
+const photos = [
   {
-    original: 'https://picsum.photos/id/1018/1000/600/',
-    thumbnail: 'https://picsum.photos/id/1018/250/150/',
+    src: 'http://example.com/example/img1.jpg',
+    width: 4,
+    height: 3
   },
   {
-    original: 'https://picsum.photos/id/1015/1000/600/',
-    thumbnail: 'https://picsum.photos/id/1015/250/150/',
-  },
-  {
-    original: 'https://picsum.photos/id/1019/1000/600/',
-    thumbnail: 'https://picsum.photos/id/1019/250/150/',
-  },
+    src: 'http://example.com/example/img2.jpg',
+    width: 1,
+    height: 1
+  }
 ];
-
 const Gallery = ({ classes }) => {
   return (
-    <ImageGallery
-      items={images}
-    />
+    <ImageGallery photos={photos} />
   );
 };
 
