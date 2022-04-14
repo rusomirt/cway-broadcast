@@ -124,7 +124,7 @@ const Broadcast = ({ classes }) => {
   // ---------- Extract children of selected folder (as it is in tree structure) --------------------
 
   let childrenOfSelectedFolder = selectedItemPath.length > 0 ? tree : [];
-  selectedItemPath.forEach((currentFolderId, index) => {
+  selectedItemPath.forEach((currentFolderId) => {
     childrenOfSelectedFolder = childrenOfSelectedFolder.find((topLevelFolder) => topLevelFolder.id === currentFolderId).children;
   });
   console.log('childrenOfSelectedFolder: ', childrenOfSelectedFolder);
