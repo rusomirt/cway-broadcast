@@ -46,7 +46,7 @@ const Gallery = ({ classes, fileIds }) => {
   //   <ImageGallery photos={images} />
   // );
 
-  const previewSizeLimits = { width: 150, height: 150 };
+  const previewSizeLimits = { width: 200, height: 200 };
   return (
     <div className={classes.root}>
       {fileIds.map((id) => (
